@@ -1,0 +1,17 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  font-family: system-ui;
+  text-align: center;
+}
+fieldset {
+  display: block;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+/*
+:is(#liked, #dissed) .lunch button {
+  display: none;
+}*/
