@@ -4,6 +4,8 @@
 body {
   font-family: system-ui;
   text-align: center;
+  max-width: 30rem;
+  margin: auto;
 }
 fieldset {
   display: block;
@@ -11,7 +13,14 @@ fieldset {
   margin: 0;
   padding: 0;
 }
-/*
-:is(#liked, #dissed) .lunch button {
-  display: none;
-}*/
+button {
+  padding: .5rem 1rem;
+}
+.lunch {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+.lunch-name {
+  margin-inline-end: auto;
+}

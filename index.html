@@ -15,36 +15,35 @@
 </head>
 <body>
   <header>
-    <h1>
-      Lounaspeli
-      <span>id here</span>
-    </h1>
-    <button id="copylink">Kopioi linkki</button>
-    <br><br>
+    <h1>Lounaspeli</h1>
+    <p>
+      <button id="copylink">Kopioi linkki</button>
+    </p>
+    <p id="peers"></p>
   </header>
 
-  <tabs->
-    <button value="lunches">Lounaat</button>
-    <button value="liked">Tykätyt</button>
-    <button value="dissed">Dissatut</button>
-  </tabs->
+  <template-string id="lunch">
+    <script type="text/html">
+      <div class="lunch" id="${name}">
+        <h3 class="lunch-name"><a href="${url}">${name}</a></h3>
+        <button type="button" name="like" value="${name}">✅</button>
+        <button type="button" name="diss" value="${name}">❌</button>
+      </div>
+    </script>
+  </template-string>
+  <form id="lunches"></form>
 
-  <form>
-    <section id="lunches">
-      <template-string id="lunch">
-        <script type="text/html">
-          <fieldset class="lunch" id="${id}">
-            <h3><a href="${url}">${name}</a></h3>
-            <p>${menu}</p>
-            <button type="button" name="like" value="${id}">👍 <output name="likecount"></output></button>
-            <button type="button" name="diss" value="${id}">👎 <output name="disscount"></output></button>
-          </fieldset>
-        </script>
-      </template-string>
-    </section>
-    <section id="liked"></section>
-    <section id="dissed"></section>
-  </form>
+  <h2>Voittajat</h2>
+  <template-string id="score">
+    <script type="text/html">
+      <div class="lunch">
+        <h3 class="lunch-name">${name}</h3>
+        <span id="${name}-scores">${scores}</span>
+      </div>
+    </script>
+  </template-string>
+  <div id="scoreboard">
+  </div>
 
 </body>
 </html>
