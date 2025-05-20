@@ -1,3 +1,5 @@
+//TODO: y.js for data, svelte for ui
+
 // import {listen} from '.vendor/form.js'
 import {ids} from './memelib.js'
 import {elements, value, change, listen} from './form.js'
