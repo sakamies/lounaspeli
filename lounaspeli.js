@@ -15,28 +15,34 @@ function reduceScore(lunch) {
 }
 
 function renderScoreboard() {
-  const sorted = lunches.toSorted((a, b) => {
+  const html = lunches
+  .toSorted((a, b) => {
     const ascore = reduceScore(a)
     const bscore = reduceScore(b)
     return bscore - ascore
   })
-  const winners = sorted.map(lunch => {
+  .map(lunch => {
     return {
       name: lunch.name,
       scores: formatScores(lunch.scores)
     }
   })
-  const html = winners.map(win => {
-    const {name, scores} = win
+  .map(lunch => {
+    const {name, scores} = lunch
     return ids.score.render({name, scores})
-  }).join('')
-  console.log(html)
+  })
+  .join('')
   ids.scoreboard.innerHTML = html
 }
 renderScoreboard()
 
 function formatScores(scores) {
-  return Object.values(scores).map(val => val > 0 ? '✅' : '❌').join('')
+  return Object
+  .values(scores)
+  .toSorted()
+  .reverse()
+  .map(val => val > 0 ? '✅' : '❌')
+  .join('')
 }
 
 function join(sessionid) {
