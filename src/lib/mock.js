@@ -1,10 +1,8 @@
-export const sessionid = 'mock-sessionid-xyz-321'
-
-//TODO: Generate and persist a client uuid to localstorage
+//TODO: Generate and persist a client uuid to localstorage?
 export const myid = 'c'
 
 export const peers = {a: 3, b: -3}
-//{'clientid1': score = null}
+//niinku {'clientid1': score}, score on vaan siks että näytetään spectator tyylinen avatar jos ei oo äänestäny ollenkaan
 
 export const lunches = [
   {

@@ -1,5 +1,0 @@
-Peer sends a like to everybody
-
-Reciever adds like
-
-lunch ID should be derived from restaurant name
