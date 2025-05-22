@@ -1,13 +1,23 @@
 <script>
-  let sessionid = crypto.randomUUID()
+  import { onMount } from 'svelte'
+
+  let sessionid = ''
+  onMount(() => {
+    sessionid = crypto.randomUUID()
+  })
 </script>
+
+<header>
+  <h1>Lounaspeli</h1>
+</header>
 
 <form action="{sessionid}">
   <p>
-    <label>id</label>
-    <input name="jep" value="{sessionid}" style="width: 36ch">
+    <button>Aloita</button>
   </p>
   <p>
-    <button>Uusi peli</button>
+    <small>
+      ({sessionid})
+    </small>
   </p>
 </form>

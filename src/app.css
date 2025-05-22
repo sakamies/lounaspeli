@@ -3,9 +3,16 @@
 }
 body {
   font-family: system-ui;
-  text-align: center;
   max-width: 30rem;
   margin: auto;
+}
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+input {
+  font: inherit;
 }
 fieldset {
   display: block;
@@ -16,11 +23,46 @@ fieldset {
 button {
   padding: .5rem 1rem;
 }
-.lunch {
-  display: flex;
-  align-items: center;
-  gap: .25rem;
+
+.header {
+  text-align: center;
 }
-.lunch-name {
-  margin-inline-end: auto;
+
+.new-lunch {
+  margin-block-end: .5rem;
+}
+
+.lunch {
+  text-align: center;
+  display: grid;
+  grid-template:
+    "like name diss"
+    "like votes diss"
+    / auto 1fr auto auto
+  ;
+  align-items: center;
+
+  .like {
+    grid-area: like;
+  }
+  .name {
+    grid-area: name;
+    margin: 0;
+  }
+  .diss {
+    grid-area: diss;
+  }
+  .delete {
+    grid-area: name;
+    margin-left: auto;
+/*    &:not(:focus) {
+      width: 0;
+      overflow: hidden;
+      padding: 0;
+      border: none;
+    }*/
+  }
+  .votes {
+    grid-area: votes;
+  }
 }
