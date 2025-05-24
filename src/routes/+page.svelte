@@ -3,6 +3,7 @@
 
   let sessionid = ''
   onMount(() => {
+    //TODO: use nanoid instead so the url isn't so nasty.
     sessionid = crypto.randomUUID()
   })
 </script>

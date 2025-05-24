@@ -5,28 +5,57 @@
   import { svelteSyncedStore } from "@syncedstore/svelte"
   import { WebrtcProvider } from "y-webrtc"
 
-  let { data } = $props()
+  //Svelte stuff
+  const { data } = $props()
 
+  //Set up yjs for svelte
   const store = syncedStore({ players: {}, lunches: [] })
   const svelteStore = svelteSyncedStore(store)
-  const doc = getYjsDoc(store)
+  const ydoc = getYjsDoc(store)
+  let awareness
 
-  let myid = $state('ville') //This should be a normal emtpy string and not a reactive state, but making it reactive for now so I can test different ids in different tabs locally
+  let playerName = $state('')
+  let players = $state([])
+
   onMount(() => {
-    myid = localStorage.getItem('lounaspeli-myid') || crypto.randomUUID()
-    localStorage.setItem('lounaspeli-myid', myid)
-    $svelteStore.players[myid] = null
-    console.log(data.sessionid)
-    //TODO: this gives timeouts, maybe I'm rate limited or something because it's a free server.
-    const webrtcProvider = new WebrtcProvider('lounaspeli-' + data.sessionid, doc, 'hyvää oulua')
+    playerName = localStorage.getItem('lounaspeli-playerName') || '👀'
+    //start webrtcProvider only after mount because it's clientside
+    const webrtcProvider = new WebrtcProvider(
+      'lounaspeli-' + data.sessionid,
+      ydoc,
+      {
+        password: 'hyvää oulua',
+        signaling: [
+          //'wss://y-webrtc-ckynwnzncc.now.sh',
+          'ws://localhost:4444',
+        ]
+      }
+    )
+
+    awareness = webrtcProvider.awareness
+    awareness.on('change', awarenessChanged)
+    setPlayerName(playerName)
   })
 
+  function setPlayerName(name) {
+    awareness.setLocalStateField('name', name)
+    localStorage.setItem('lounaspeli-playerName', name)
+  }
+
+  function awarenessChanged(changes) {
+    players = awareness.getStates().entries()
+    // for (const player of players) {
+    //   console.log(player)
+    // }
+  }
+
   let newLunchName = $state('')
-  function addLunch() {
+  function addLunch(e) {
+    e.preventDefault()
     const value = newLunchName && newLunchName.trim()
     if (!value) return
     $svelteStore.lunches.push({
-      adder: myid,
+      adder: awareness.clientID,
       name: value,
       votes: {},
     })
@@ -38,11 +67,11 @@
   }
 
   function vote(lunch, vote) {
-    lunch.votes[myid] = vote
+    lunch.votes[awareness.clientID] = vote
     const myVotesSum = $svelteStore.lunches.reduce((total, lunch) => {
       return total + (lunch.votes[myid] || 0);
     }, 0);
-    $svelteStore.players[myid] = myVotesSum
+    $svelteStore.players[awareness.clientID] = myVotesSum
   }
 
   function toggleAdmin(e) {
@@ -58,30 +87,21 @@
 </script>
 
 <header class="header">
-  <input bind:value="{myid}" />
-  <br>
-  <a href="/">Uusi peli</a>
   <h1>Lounaspeli</h1>
   <p>
-    {#each Object.values($svelteStore.players) as voteSum}
-      {#if voteSum === null}
-        👀
-      {:else if voteSum > 0}
-        👍
-      {:else if voteSum < 0}
-        👎
-      {:else}
-        🤔
-      {/if}
-    {/each}
+    <button onclick={copylink}>Kopioi linkki leikepöydälle</button>
   </p>
-  <p>
-    <small hidden>({data.sessionid})</small>
-    <button on:click={copylink}>Kopioi linkki</button>
+  <label for="playerName">Kuka pelaa?</label>
+  <br>
+  <input id="playerName" value="{playerName}" oninput={e => setPlayerName(e.target.value)}>
+  <p class="players">
+    {#each players as [id, player]}
+      <span class="player">{player.name}</span>
+    {/each}
   </p>
 </header>
 
-<form class="new-lunch" on:submit|preventDefault={addLunch}>
+<form class="new-lunch" onsubmit={addLunch}>
   <label for="new-lunch-name">Ravinteli</label>
   <br>
   <input id="new-lunch-name" bind:value="{newLunchName}" />
@@ -90,10 +110,10 @@
 
 {#each $svelteStore.lunches as lunch}
   <div class="lunch">
-    <button class="like" on:click={() => vote(lunch, 1)}>👍</button>
+    <button class="like" onclick={() => vote(lunch, 1)}>👍</button>
     <h3 class="name">{lunch.name}</h3>
-    <button class="delete" on:click={() => removeLunch(lunch)}>❌</button>
-    <button class="diss" on:click={() => vote(lunch, -1)}>👎</button>
+    <button class="delete" onclick={() => removeLunch(lunch)}>❌</button>
+    <button class="diss" onclick={() => vote(lunch, -1)}>👎</button>
     <div class="votes">
       {#each Object.entries(lunch.votes) as [id, vote]}
         <span id="{id}-vote">
