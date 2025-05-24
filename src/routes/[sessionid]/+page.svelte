@@ -37,6 +37,10 @@
     setPlayerName(playerName)
   })
 
+  function exit() {
+    //TODO: disconnect
+  }
+
   function setPlayerName(name) {
     awareness.setLocalStateField('name', name)
     localStorage.setItem('lounaspeli-playerName', name)
@@ -44,9 +48,6 @@
 
   function awarenessChanged(changes) {
     players = awareness.getStates().entries()
-    // for (const player of players) {
-    //   console.log(player)
-    // }
   }
 
   let newLunchName = $state('')
@@ -86,7 +87,12 @@
   }
 </script>
 
+<svelte:head>
+  <title>Lounaspeli {data.sessionid}</title>
+</svelte:head>
+
 <header class="header">
+  <button onclick={exit}>Exit</button>
   <h1>Lounaspeli</h1>
   <p>
     <button onclick={copylink}>Kopioi linkki leikepöydälle</button>
@@ -124,7 +130,7 @@
           {/if}
         </span>
       {:else}
-        ← Äänestäkää →
+        &nbsp;
       {/each}
     </div>
   </div>

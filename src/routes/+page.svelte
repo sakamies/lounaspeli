@@ -8,6 +8,10 @@
   })
 </script>
 
+<svelte:head>
+  <title>Lounaspeli</title>
+</svelte:head>
+
 <header>
   <h1>Lounaspeli</h1>
 </header>
